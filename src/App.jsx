@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 const list = [
@@ -20,20 +20,28 @@ const list = [
   },
 ];
 const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const searchedStories = list.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <h1>My Hacker Stories</h1>
-      <Search />
+      <Search onSearch={handleSearch} />
       <hr />
-      <List />
+      <List list={searchedStories} />
     </div>
   );
 };
 
-const List = () => {
+const List = (props) => {
   return (
     <ul>
-      {list.map((item) => {
+      {props.list.map((item) => {
         return (
           <li key={item.objectID}>
             <span>
@@ -49,15 +57,11 @@ const List = () => {
   );
 };
 
-const Search = () => {
-  const handleChange = (event) => {
-    console.log(event);
-    console.log(event.target.value);
-  };
+const Search = (props) => {
   return (
     <div>
       <label htmlFor="search"> Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
+      <input id="search" type="text" onChange={props.onSearch} />
     </div>
   );
 };
